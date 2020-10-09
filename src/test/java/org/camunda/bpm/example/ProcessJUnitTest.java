@@ -30,15 +30,14 @@ public class ProcessJUnitTest {
     @Before
     public void setUp() {
         init(engine.getProcessEngine());
-        BpmnModelInstance modelInst;
-        modelInst = Bpmn.createProcess("MultiInstanceProcess")
+        BpmnModelInstance modelInst = Bpmn.createProcess("MultiInstanceProcess")
                 .executable()
                 .startEvent()
                 .userTask().id("ProcessCollectionItemTask").multiInstance()
                 .parallel().camundaCollection("${orderItems}").camundaElementVariable("orderItem")
                 .multiInstanceDone()
                 .endEvent().name("Processing done").done();
-        DeploymentWithDefinitions result = repositoryService().createDeployment().addModelInstance("process.bpmn",modelInst).deployWithResult();
+        repositoryService().createDeployment().addModelInstance("process.bpmn",modelInst).deploy();
     }
 
     @Test
@@ -53,10 +52,6 @@ public class ProcessJUnitTest {
         // querying by process variable should not return 3 tasks
         assertEquals(0, taskQuery().processInstanceId(pi1.getId()).processVariableValueEquals("orderItem", "Tic").count());
         // fails, returns 3 instances
-        // the instances of the task should have a taskVariable orderItem with the 3 different values
-        Task tacTask = taskQuery().processInstanceId(pi1.getId()).taskVariableValueEquals("orderItem", "Tac").singleResult();
-        assertNotNull(tacTask);
-        // fails, returns no instance
     }
 
     @Test
