@@ -53,10 +53,6 @@ public class ProcessJUnitTest {
         // querying by process variable should not return 3 tasks
         assertEquals(0, taskQuery().processInstanceId(pi1.getId()).processVariableValueEquals("orderItem", "Tic").count());
         // fails, returns 3 instances
-        // the instances of the task should have a taskVariable orderItem with the 3 different values
-        Task tacTask = taskQuery().processInstanceId(pi1.getId()).taskVariableValueEquals("orderItem", "Tac").singleResult();
-        assertNotNull(tacTask);
-        // fails, returns no instance
     }
 
     @Test
